@@ -1,10 +1,7 @@
 package com.codecool.jpaexample.model;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 public class Student {
@@ -15,15 +12,24 @@ public class Student {
 
     private String name;
 
+    @Column(unique = true, nullable = false)
     private String email;
 
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
 
+    @Transient
     private long age;
 
     @OneToOne
     private Address address;
+
+    @ManyToOne
+    private Klass klass;
+
+    @ElementCollection
+    @CollectionTable(name = "Phone")
+    private List<String> phoneNumbers;
 
     public Student() {
     }
@@ -36,9 +42,10 @@ public class Student {
                 / (60L * 60L * 1000L * 24L * 365L);
     }
 
-    public Student(String name, String email, Date dateOfBirth, Address address) {
+    public Student(String name, String email, Date dateOfBirth, Address address, List<String> phoneNumbers) {
         this(name, email, dateOfBirth);
         this.address = address;
+        this.phoneNumbers = phoneNumbers;
     }
 
     public long getId() {
@@ -95,4 +102,7 @@ public class Student {
                 '}';
     }
 
+    public void setKlass(Klass klass) {
+        this.klass = klass;
+    }
 }
